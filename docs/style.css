@@ -87,6 +87,10 @@ h2 { font-size: 1.24rem; letter-spacing: .035em; text-transform: uppercase; marg
 .action-grid button:disabled { color: var(--muted); }
 .action-meta { color: var(--muted); display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: .83rem; margin-top: 8px; }
 .action-meta button { border: 0; background: none; padding: 5px 0 5px 5px; text-decoration: underline; text-underline-offset: 3px; }
+.save-tools { margin-top: 14px; padding: 10px 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+.save-tools span:first-child { margin-right: auto; }
+.save-tools button { background: #191020; border: 1px solid #614c73; padding: 5px 8px; }
+.save-tools button + button { margin-left: 6px; }
 
 @media (max-width: 690px) {
   .cabinet { padding: 18px 12px 20px; }

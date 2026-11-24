@@ -10,6 +10,11 @@ navegador, com até duas horas de simulação offline.
 Execute `python3 -m http.server 8000 --directory docs` e abra
 `http://localhost:8000`. A pasta `docs/` inclui os arquivos WASM da demo.
 
+Para sincronizar o save com SQLite, rode `cargo run --locked -p idlerite-server`
+no repo vizinho IdleRite e abra `http://127.0.0.1:8080/strain-fighter/`.
+Use **Exportar save** e **Importar save** para trazer o progresso de uma demo
+aberta em outro domínio ou porta.
+
 ## Desenvolvimento
 
 As regras rodam em Rust e usam a biblioteca IdleRite. Para recompilar, tenha

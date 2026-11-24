@@ -1,4 +1,5 @@
 import init, { Arena } from './wasm/strain_fighter.js';
+import { openSave } from './save-client.js';
 
 const SAVE_KEY = 'strain-fighter-v1';
 const fighters = [
@@ -25,30 +26,20 @@ function showNotice(message) {
 
 async function start() {
   await init();
-  let storageAvailable = true;
-  let saved;
-  try {
-    saved = localStorage.getItem(SAVE_KEY) ?? undefined;
-  } catch {
-    storageAvailable = false;
-  }
-
-  let arena;
-  try {
-    arena = new Arena(now(), saved);
-  } catch {
-    showNotice('O save local está em um formato que esta versão não consegue abrir.');
-    return;
-  }
+  const saves = await openSave({
+    game: 'strain-fighter',
+    key: SAVE_KEY,
+    controls: byId('save-tools'),
+    validate(value) {
+      const candidate = new Arena(now(), JSON.stringify(value));
+      candidate.free();
+      return true;
+    },
+  });
+  let arena = new Arena(now(), saves.initial ?? undefined);
 
   function persist() {
-    if (!storageAvailable) return;
-    try {
-      localStorage.setItem(SAVE_KEY, arena.save());
-    } catch {
-      storageAvailable = false;
-      showNotice('O navegador bloqueou o salvamento. O progresso vale nesta sessão.');
-    }
+    saves.write(arena.save());
   }
 
   const roster = fighters.map((fighter, index) => {
@@ -129,11 +120,11 @@ async function start() {
 
   function sync(returning = false) {
     const result = JSON.parse(arena.advance(now()));
-    if (returning && result.seconds >= 60 && result.coins > 0 && storageAvailable) {
+    if (returning && result.seconds >= 60 && result.coins > 0) {
       showNotice('Enquanto você esteve fora, a arena rendeu ' + format.format(result.coins)
         + ' fichas e ' + format.format(result.wins) + ' vitórias.');
     }
-    persist();
+    if (result.seconds > 0) persist();
     if (result.seconds > 0 || returning) draw();
   }
 
@@ -141,14 +132,24 @@ async function start() {
   byId('special').addEventListener('click', () => action(() => arena.special()));
   byId('pause').addEventListener('click', () => action(() => arena.set_paused(!previous.paused, now())));
   document.addEventListener('visibilitychange', () => sync(!document.hidden));
-  window.addEventListener('pagehide', persist);
+  window.addEventListener('pagehide', () => {
+    if (!previous.paused) persist();
+  });
+  saves.onRestore(raw => {
+    const replacement = new Arena(now(), raw);
+    arena.free();
+    arena = replacement;
+    previous = undefined;
+    notice.hidden = true;
+    sync(true);
+  });
   window.setInterval(() => {
     if (!document.hidden) sync();
   }, 1_000);
 
   notice.hidden = true;
-  if (!storageAvailable) showNotice('O navegador bloqueou o salvamento. O progresso vale nesta sessão.');
   sync(true);
+  if (saves.initial === null) persist();
   byId('controls').inert = false;
 }
 
