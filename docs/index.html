@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#140e1c">
+  <meta name="description" content="StrainFighter, um jogo de luta idle da IdleRite Games.">
+  <title>StrainFighter · IdleRite Games</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="game.js"></script>
+</head>
+<body>
+  <main class="cabinet">
+    <header class="masthead">
+      <div>
+        <p class="studio">IDLERITE GAMES</p>
+        <h1>STRAIN<span>FIGHTER</span></h1>
+      </div>
+      <div class="scoreboard" aria-label="Seu progresso">
+        <div><span>Fichas</span><strong id="coins">0</strong></div>
+        <div><span>Vitórias</span><strong id="wins">0</strong></div>
+      </div>
+    </header>
+
+    <p id="notice" class="notice" role="status">Carregando a arena…</p>
+
+    <section class="arena" aria-label="Arena de combate">
+      <div class="arena-hud">
+        <div class="side player">
+          <div class="fighter-label"><strong id="player-name">Lemon Haze</strong><span id="player-hp-label">110/110</span></div>
+          <progress id="player-hp" value="110" max="110" aria-label="Vida do seu lutador"></progress>
+        </div>
+        <div class="round" id="stage-label">1 / 5</div>
+        <div class="side opponent">
+          <div class="fighter-label"><strong id="rival-name">Violet Skunk</strong><span id="rival-hp-label">96/96</span></div>
+          <progress id="rival-hp" value="96" max="96" aria-label="Vida do rival"></progress>
+        </div>
+      </div>
+      <div id="player-sprite" class="sprite lemon" aria-hidden="true"></div>
+      <div id="rival-sprite" class="sprite violet rival" aria-hidden="true"></div>
+      <div id="fight-call" class="fight-call" aria-hidden="true" hidden></div>
+      <div class="arena-footer">
+        <span id="arena-name">Estufa Subsolo</span>
+        <span id="fight-status" role="status">Combate automático</span>
+      </div>
+    </section>
+
+    <div class="controls" id="controls" inert>
+      <section class="roster" aria-labelledby="roster-title">
+        <h2 id="roster-title">Lutadores</h2>
+        <div class="roster-grid" id="roster"></div>
+      </section>
+      <section class="actions" aria-labelledby="actions-title">
+        <h2 id="actions-title">Comandos</h2>
+        <div class="action-grid">
+          <button type="button" id="train"><strong>Treinar</strong><span id="train-cost">20 fichas</span></button>
+          <button type="button" id="special" class="special"><strong>Especial</strong><span id="charge">0 / 5</span></button>
+        </div>
+        <div class="action-meta"><span id="fighter-stats">16 ATQ · 110 PV</span><button type="button" id="pause" aria-pressed="false">Pausar</button></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
