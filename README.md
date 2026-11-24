@@ -15,6 +15,10 @@ no repo vizinho IdleRite e abra `http://127.0.0.1:8080/strain-fighter/`.
 Use **Exportar save** e **Importar save** para trazer o progresso de uma demo
 aberta em outro domínio ou porta.
 
+Os idiomas PT-BR, inglês e espanhol acompanham a preferência usada no hub e no
+Gunkyard. A arena inclui partículas e impactos em Three.js, com a arte 2D
+disponível sem WebGL ou quando o movimento reduzido está ativo.
+
 ## Desenvolvimento
 
 As regras rodam em Rust e usam a biblioteca IdleRite. Para recompilar, tenha

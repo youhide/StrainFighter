@@ -42,7 +42,7 @@ async function request(path, options) {
   });
 }
 
-export async function openSave({ game, key, validate, controls }) {
+export async function openSave({ game, key, validate, controls, translate = value => value }) {
   const metaKey = `${key}:idlerite-sync`;
   const endpoint = `/api/v1/saves/${game}`;
   let storageAvailable = true;
@@ -73,14 +73,14 @@ export async function openSave({ game, key, validate, controls }) {
   file.type = 'file';
   file.accept = '.json,application/json';
   file.hidden = true;
-  const exportButton = button('Exportar save', () => {
+  const exportButton = button(translate('Exportar save'), () => {
     if (latest !== null) download(game, latest);
   });
-  const useServer = button('Usar save do servidor', () => {
+  const useServer = button(translate('Usar save do servidor'), () => {
     const snapshot = conflict;
     if (snapshot) adopt(snapshot);
   });
-  const useLocal = button('Enviar meu save local', () => {
+  const useLocal = button(translate('Enviar meu save local'), () => {
     if (!conflict) return;
     base = conflict;
     conflict = null;
@@ -92,12 +92,13 @@ export async function openSave({ game, key, validate, controls }) {
   choose.hidden = true;
   choose.append(useServer, useLocal);
   const transfer = document.createElement('span');
-  transfer.append(exportButton, button('Importar save', () => file.click()), file);
+  transfer.append(exportButton, button(translate('Importar save'), () => file.click()), file);
   controls.append(status, transfer, choose);
   show('Verificando o save no servidor…');
 
   function show(message) {
-    if (status.textContent !== message) status.textContent = message;
+    const text = translate(message);
+    if (status.textContent !== text) status.textContent = text;
     choose.hidden = conflict === null;
     exportButton.disabled = latest === null;
   }
@@ -112,7 +113,7 @@ export async function openSave({ game, key, validate, controls }) {
   }
 
   function localStatus() {
-    return storageAvailable ? 'Save local' : 'O navegador bloqueou o save local';
+    return translate(storageAvailable ? 'Save local' : 'O navegador bloqueou o save local');
   }
 
   function replaceLocal(raw) {
@@ -233,7 +234,7 @@ export async function openSave({ game, key, validate, controls }) {
         show('Save sincronizado');
       }
     } catch {
-      show(`${localStatus()} · servidor indisponível`);
+      show(`${localStatus()} · ${translate('servidor indisponível')}`);
       retry = retryDelay;
     } finally {
       busy = false;
@@ -250,7 +251,7 @@ export async function openSave({ game, key, validate, controls }) {
       const parsed = JSON.parse(await selected.text());
       const raw = normalize(JSON.stringify(parsed?.game === game ? parsed.save : parsed), validate);
       if (raw === null) throw new Error();
-      if (raw === latest || (latest !== null && !window.confirm('Substituir o progresso atual pelo save do arquivo?'))) return;
+      if (raw === latest || (latest !== null && !window.confirm(translate('Substituir o progresso atual pelo save do arquivo?')))) return;
       replaceLocal(raw);
       if (!conflict) show(standalone ? localStatus() : 'Save importado · aguardando sincronização');
       restore?.(raw);

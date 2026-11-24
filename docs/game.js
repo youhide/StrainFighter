@@ -1,5 +1,6 @@
 import init, { Arena } from './wasm/strain_fighter.js';
 import { openSave } from './save-client.js';
+import { locale, t } from './i18n.js';
 
 const SAVE_KEY = 'strain-fighter-v1';
 const fighters = [
@@ -16,7 +17,7 @@ const rivals = [
 ];
 const byId = id => document.getElementById(id);
 const now = () => BigInt(Date.now());
-const format = new Intl.NumberFormat('pt-BR');
+const format = new Intl.NumberFormat(locale);
 const notice = byId('notice');
 
 function showNotice(message) {
@@ -29,6 +30,7 @@ async function start() {
   const saves = await openSave({
     game: 'strain-fighter',
     key: SAVE_KEY,
+    translate: t,
     controls: byId('save-tools'),
     validate(value) {
       const candidate = new Arena(now(), JSON.stringify(value));
@@ -67,7 +69,7 @@ async function start() {
     byId('player-name').textContent = fighter.name;
     byId('rival-name').textContent = rival.name;
     byId('stage-label').textContent = (view.stage + 1) + ' / ' + rivals.length;
-    byId('arena-name').textContent = rival.arena;
+    byId('arena-name').textContent = t(rival.arena);
     byId('player-hp').max = view.maxHp;
     byId('player-hp').value = view.hp;
     byId('player-hp-label').textContent = view.hp + '/' + view.maxHp;
@@ -78,37 +80,43 @@ async function start() {
     byId('rival-sprite').className = 'sprite rival ' + rival.sprite;
 
     if (previous?.stage === view.stage && previous.rivalHp > view.rivalHp) {
+      byId('arena-fx').parentElement.dispatchEvent(new Event('idle-arena-impact'));
       byId('player-sprite').classList.add('hit');
       byId('rival-sprite').classList.add('hit');
+      if (previous.rivalHp - view.rivalHp > view.damage) byId('player-sprite').classList.add('heavy');
     }
+    byId('player-sprite').classList.toggle('defeated', view.outcome === 'defeat');
+    byId('rival-sprite').classList.toggle('defeated', view.outcome === 'knockout');
     previous = view;
 
     const status = view.outcome === 'knockout' ? 'Vitória por nocaute'
       : view.outcome === 'defeat' ? 'Derrota · revanche automática'
         : 'Combate automático';
     const statusElement = byId('fight-status');
-    const statusText = view.paused ? 'Pausado' : status;
+    const statusText = t(view.paused ? 'Pausado' : status);
     if (statusElement.textContent !== statusText) statusElement.textContent = statusText;
     const call = byId('fight-call');
     call.hidden = view.outcome === 'fighting' || view.paused;
-    call.textContent = view.outcome === 'knockout' ? 'K.O.!' : 'REVANCHE';
+    call.textContent = t(view.outcome === 'knockout' ? 'K.O.!' : 'REVANCHE');
 
     for (const [index, entry] of roster.entries()) {
       entry.button.setAttribute('aria-pressed', String(index === view.fighter));
-      entry.level.textContent = 'Nv. ' + view.levels[index];
+      entry.level.textContent = t('Nv. {0}',view.levels[index]);
     }
-    byId('fighter-stats').textContent = view.damage + ' ATQ · ' + view.maxHp + ' PV';
+    byId('fighter-stats').textContent = t('{0} ATQ · {1} PV',view.damage,view.maxHp);
     byId('train-cost').textContent = view.trainingCost === null
-      ? 'Nível máximo' : format.format(view.trainingCost) + ' fichas';
+      ? t('Nível máximo') : t('{0} fichas',format.format(view.trainingCost));
     byId('train').disabled = view.trainingCost === null || view.coins < view.trainingCost;
     byId('charge').textContent = view.charge + ' / ' + view.fullCharge;
+    byId('special-meter').max = view.fullCharge;
+    byId('special-meter').value = view.charge;
     byId('special').disabled = view.paused || view.charge < view.fullCharge || view.outcome !== 'fighting';
     byId('pause').setAttribute('aria-pressed', String(view.paused));
-    byId('pause').textContent = view.paused ? 'Retomar' : 'Pausar';
+    byId('pause').textContent = t(view.paused ? 'Retomar' : 'Pausar');
   }
 
   for (const id of ['player-sprite', 'rival-sprite']) {
-    byId(id).addEventListener('animationend', event => event.currentTarget.classList.remove('hit'));
+    byId(id).addEventListener('animationend', event => event.currentTarget.classList.remove('hit','heavy'));
   }
 
   function action(command) {
@@ -121,8 +129,7 @@ async function start() {
   function sync(returning = false) {
     const result = JSON.parse(arena.advance(now()));
     if (returning && result.seconds >= 60 && result.coins > 0) {
-      showNotice('Enquanto você esteve fora, a arena rendeu ' + format.format(result.coins)
-        + ' fichas e ' + format.format(result.wins) + ' vitórias.');
+      showNotice(t('Enquanto você esteve fora, a arena rendeu {0} fichas e {1} vitórias.',format.format(result.coins),format.format(result.wins)));
     }
     if (result.seconds > 0) persist();
     if (result.seconds > 0 || returning) draw();
@@ -154,6 +161,6 @@ async function start() {
 }
 
 start().catch(error => {
-  showNotice('Não foi possível carregar a arena. Abra a demo pelo site ou por um servidor HTTP.');
+  showNotice(t('Não foi possível carregar a arena. Abra a demo pelo site ou por um servidor HTTP.'));
   console.error(error);
 });
