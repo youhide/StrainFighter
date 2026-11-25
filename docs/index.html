@@ -8,7 +8,6 @@
   <title>StrainFighter · IdleRite Games</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="game.js"></script>
-  <script type="module" src="arena-fx.js"></script>
 </head>
 <body>
   <main class="cabinet">
@@ -26,7 +25,7 @@
     <p id="notice" class="notice" role="status">Carregando a arena…</p>
 
     <section class="arena" aria-label="Arena de combate">
-      <canvas id="arena-fx" class="arena-fx" data-tint="#b385fe" data-spark="#e7ff91" aria-hidden="true"></canvas>
+      <canvas id="arena-fx" class="arena-fx" aria-hidden="true"></canvas>
       <div class="arena-hud">
         <div class="side player">
           <div class="fighter-label"><strong id="player-name">Lemon Haze</strong><span id="player-hp-label">110/110</span></div>
@@ -40,6 +39,7 @@
       </div>
       <div id="player-sprite" class="sprite lemon" aria-hidden="true"></div>
       <div id="rival-sprite" class="sprite violet rival" aria-hidden="true"></div>
+      <div id="attack-call" class="attack-call" aria-hidden="true" hidden></div>
       <div id="fight-call" class="fight-call" aria-hidden="true" hidden></div>
       <div class="arena-footer">
         <span id="arena-name">Estufa Subsolo</span>
@@ -56,10 +56,11 @@
         <h2 id="actions-title">Comandos</h2>
         <div class="action-grid">
           <button type="button" id="train"><strong>Treinar</strong><span id="train-cost">20 fichas</span></button>
-          <button type="button" id="special" class="special"><strong>Especial</strong><span id="charge">0 / 5</span></button>
+          <button type="button" id="special" class="special"><strong id="special-name">Raio Limão</strong><span id="charge">0 / 5</span></button>
         </div>
         <progress id="special-meter" value="0" max="5" aria-label="Carga do especial"></progress>
         <div class="action-meta"><span id="fighter-stats">16 ATQ · 110 PV</span><button type="button" id="pause" aria-pressed="false">Pausar</button></div>
+        <div class="move-readout"><span>Golpe automático</span><strong id="normal-move">Corte Cítrico</strong></div>
       </section>
     </div>
     <section id="save-tools" class="save-tools" aria-label="Salvamento"></section>

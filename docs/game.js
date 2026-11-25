@@ -1,6 +1,7 @@
 import init, { Arena } from './wasm/strain_fighter.js';
 import { openSave } from './save-client.js';
 import { locale, t } from './i18n.js';
+import { createArenaEffects, moves } from './arena-fx.js';
 
 const SAVE_KEY = 'strain-fighter-v1';
 const fighters = [
@@ -19,6 +20,7 @@ const byId = id => document.getElementById(id);
 const now = () => BigInt(Date.now());
 const format = new Intl.NumberFormat(locale);
 const notice = byId('notice');
+const effects = createArenaEffects(document.querySelector('.arena'));
 
 function showNotice(message) {
   notice.textContent = message;
@@ -60,7 +62,7 @@ async function start() {
   });
 
   let previous;
-  function draw() {
+  function draw({ normal = false, special = false } = {}) {
     const view = JSON.parse(arena.view());
     const fighter = fighters[view.fighter];
     const rival = rivals[view.stage];
@@ -76,17 +78,23 @@ async function start() {
     byId('rival-hp').max = view.rivalMaxHp;
     byId('rival-hp').value = view.rivalHp;
     byId('rival-hp-label').textContent = view.rivalHp + '/' + view.rivalMaxHp;
-    byId('player-sprite').className = 'sprite ' + fighter.sprite;
-    byId('rival-sprite').className = 'sprite rival ' + rival.sprite;
-
-    if (previous?.stage === view.stage && previous.rivalHp > view.rivalHp) {
-      byId('arena-fx').parentElement.dispatchEvent(new Event('idle-arena-impact'));
-      byId('player-sprite').classList.add('hit');
-      byId('rival-sprite').classList.add('hit');
-      if (previous.rivalHp - view.rivalHp > view.damage) byId('player-sprite').classList.add('heavy');
+    const playerSprite = byId('player-sprite');
+    const rivalSprite = byId('rival-sprite');
+    if (!previous || previous.stage !== view.stage || previous.fighter !== view.fighter) {
+      effects.clear();
+      playerSprite.className = 'sprite ' + fighter.sprite;
+      rivalSprite.className = 'sprite rival ' + rival.sprite;
     }
-    byId('player-sprite').classList.toggle('defeated', view.outcome === 'defeat');
-    byId('rival-sprite').classList.toggle('defeated', view.outcome === 'knockout');
+
+    const attack = special || (normal && previous?.stage === view.stage && previous.fighter === view.fighter && previous.rivalHp > view.rivalHp);
+    if (attack) {
+      rivalSprite.classList.remove('defeated');
+      const move = moves[fighter.sprite][special ? 'special' : 'normal'];
+      effects.play(fighter.sprite, special, t(move.name), view.outcome === 'knockout');
+    } else {
+      rivalSprite.classList.toggle('defeated', view.outcome === 'knockout');
+    }
+    playerSprite.classList.toggle('defeated', view.outcome === 'defeat');
     previous = view;
 
     const status = view.outcome === 'knockout' ? 'Vitória por nocaute'
@@ -104,6 +112,8 @@ async function start() {
       entry.level.textContent = t('Nv. {0}',view.levels[index]);
     }
     byId('fighter-stats').textContent = t('{0} ATQ · {1} PV',view.damage,view.maxHp);
+    byId('normal-move').textContent = t(moves[fighter.sprite].normal.name);
+    byId('special-name').textContent = t(moves[fighter.sprite].special.name);
     byId('train-cost').textContent = view.trainingCost === null
       ? t('Nível máximo') : t('{0} fichas',format.format(view.trainingCost));
     byId('train').disabled = view.trainingCost === null || view.coins < view.trainingCost;
@@ -115,15 +125,11 @@ async function start() {
     byId('pause').textContent = t(view.paused ? 'Retomar' : 'Pausar');
   }
 
-  for (const id of ['player-sprite', 'rival-sprite']) {
-    byId(id).addEventListener('animationend', event => event.currentTarget.classList.remove('hit','heavy'));
-  }
-
-  function action(command) {
-    arena.advance(now());
-    command();
+  function action(command, useSpecial = false) {
+    const advanced = JSON.parse(arena.advance(now()));
+    const result = command();
     persist();
-    draw();
+    draw({ normal: advanced.seconds === 1, special: useSpecial && result === true });
   }
 
   function sync(returning = false) {
@@ -132,11 +138,11 @@ async function start() {
       showNotice(t('Enquanto você esteve fora, a arena rendeu {0} fichas e {1} vitórias.',format.format(result.coins),format.format(result.wins)));
     }
     if (result.seconds > 0) persist();
-    if (result.seconds > 0 || returning) draw();
+    if (result.seconds > 0 || returning) draw({ normal: !returning && result.seconds === 1 });
   }
 
   byId('train').addEventListener('click', () => action(() => arena.train()));
-  byId('special').addEventListener('click', () => action(() => arena.special()));
+  byId('special').addEventListener('click', () => action(() => arena.special(), true));
   byId('pause').addEventListener('click', () => action(() => arena.set_paused(!previous.paused, now())));
   document.addEventListener('visibilitychange', () => sync(!document.hidden));
   window.addEventListener('pagehide', () => {

@@ -16,8 +16,9 @@ Use **Exportar save** e **Importar save** para trazer o progresso de uma demo
 aberta em outro domínio ou porta.
 
 Os idiomas PT-BR, inglês e espanhol acompanham a preferência usada no hub e no
-Gunkyard. A arena inclui partículas e impactos em Three.js, com a arte 2D
-disponível sem WebGL ou quando o movimento reduzido está ativo.
+Gunkyard. A arena usa sprites e efeitos em Canvas 2D. Lemon Haze usa Corte
+Cítrico e Raio Limão, Purple Kush usa Ombro Roxo e Abalo Violeta, e Mango Punch
+usa Chute Solar e Vórtice Solar. O combate respeita o movimento reduzido.
 
 ## Desenvolvimento
 

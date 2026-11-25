@@ -1,5 +1,12 @@
 const translations = `
 Idioma|Language|Idioma
+Golpe automático|Auto attack|Ataque automático
+Corte Cítrico|Citrus Cut|Corte Cítrico
+Raio Limão|Lemon Bolt|Rayo Limón
+Ombro Roxo|Purple Shoulder|Embestida Morada
+Abalo Violeta|Violet Quake|Temblor Violeta
+Chute Solar|Solar Kick|Patada Solar
+Vórtice Solar|Solar Vortex|Vórtice Solar
 Navegação|Navigation|Navegación
 Mercado do Gunkyard|Gunkyard Market|Mercado de Gunkyard
 Mercado no site|Web market|Mercado web
