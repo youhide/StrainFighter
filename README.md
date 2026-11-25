@@ -16,7 +16,9 @@ Use **Exportar save** e **Importar save** para trazer o progresso de uma demo
 aberta em outro domínio ou porta.
 
 Os idiomas PT-BR, inglês e espanhol acompanham a preferência usada no hub e no
-Gunkyard. A arena usa sprites e efeitos em Canvas 2D. Lemon Haze usa Corte
+Gunkyard. A arena ocupa a tela com barras de vida e comandos sobre o combate.
+Use os painéis de Lutadores e Salvamento para trocar de personagem ou gerenciar
+o progresso. A arena usa sprites e efeitos em Canvas 2D. Lemon Haze usa Corte
 Cítrico e Raio Limão, Purple Kush usa Ombro Roxo e Abalo Violeta, e Mango Punch
 usa Chute Solar e Vórtice Solar. O combate respeita o movimento reduzido.
 

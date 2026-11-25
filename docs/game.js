@@ -20,7 +20,13 @@ const byId = id => document.getElementById(id);
 const now = () => BigInt(Date.now());
 const format = new Intl.NumberFormat(locale);
 const notice = byId('notice');
-const effects = createArenaEffects(document.querySelector('.arena'));
+const battlefield = byId('combat');
+const effects = createArenaEffects(battlefield);
+
+for (const button of document.querySelectorAll('[data-panel]')) {
+  const panel = byId(button.dataset.panel);
+  button.addEventListener('click', () => panel.showModal());
+}
 
 function showNotice(message) {
   notice.textContent = message;
@@ -56,7 +62,10 @@ async function start() {
     name.textContent = fighter.name;
     const level = document.createElement('span');
     button.append(portrait, name, level);
-    button.addEventListener('click', () => action(() => arena.select(index)));
+    button.addEventListener('click', () => {
+      action(() => arena.select(index));
+      byId('roster-panel').close();
+    });
     byId('roster').append(button);
     return { button, level };
   });
@@ -70,7 +79,7 @@ async function start() {
     byId('wins').textContent = format.format(view.wins);
     byId('player-name').textContent = fighter.name;
     byId('rival-name').textContent = rival.name;
-    byId('stage-label').textContent = (view.stage + 1) + ' / ' + rivals.length;
+    byId('stage-label').textContent = t('Etapa {0} de {1}',view.stage + 1,rivals.length);
     byId('arena-name').textContent = t(rival.arena);
     byId('player-hp').max = view.maxHp;
     byId('player-hp').value = view.hp;
@@ -82,6 +91,7 @@ async function start() {
     const rivalSprite = byId('rival-sprite');
     if (!previous || previous.stage !== view.stage || previous.fighter !== view.fighter) {
       effects.clear();
+      battlefield.dataset.stage = view.stage;
       playerSprite.className = 'sprite ' + fighter.sprite;
       rivalSprite.className = 'sprite rival ' + rival.sprite;
     }

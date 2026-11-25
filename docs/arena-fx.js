@@ -56,6 +56,7 @@ export function createArenaEffects(arena) {
     const move = moves[fighter][special?'special':'normal'];
     clear();
     label.style.setProperty('--attack-color',move.color);
+    label.toggleAttribute('data-special',special);
     label.textContent = name;
     label.hidden = false;
     labelTimer = setTimeout(() => { label.hidden = true; },special?820:470);

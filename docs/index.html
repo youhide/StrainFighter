@@ -10,28 +10,40 @@
   <script type="module" src="game.js"></script>
 </head>
 <body>
-  <main class="cabinet">
+  <div class="cabinet">
     <header class="masthead">
-      <div>
-        <p class="studio">IDLERITE GAMES</p>
-        <h1>STRAIN<span>FIGHTER</span></h1>
+      <div class="brand">
+        <a class="studio" href="/">IdleRite Games</a>
+        <h1>Strain<span>Fighter</span></h1>
       </div>
-      <div class="arcade-controls"><div class="scoreboard" aria-label="Seu progresso">
-        <div><span>Fichas</span><strong id="coins">0</strong></div>
-        <div><span>Vitórias</span><strong id="wins">0</strong></div>
-      </div><label class="language-control"><span class="visually-hidden">Idioma</span><select data-language><option value="pt-BR">PT-BR</option><option value="en">English</option><option value="es">Español</option></select></label></div>
+      <nav class="arena-navigation" aria-label="Navegação">
+        <a href="#combat" aria-current="page">Combate</a>
+        <button type="button" data-panel="roster-panel" aria-haspopup="dialog">Lutadores</button>
+        <button type="button" data-panel="save-panel" aria-haspopup="dialog">Salvamento</button>
+      </nav>
+      <div class="arcade-controls">
+        <div class="scoreboard" aria-label="Seu progresso">
+          <div><span>Fichas</span><strong id="coins">0</strong></div>
+          <div><span>Vitórias</span><strong id="wins">0</strong></div>
+        </div>
+        <label class="language-control">
+          <span class="visually-hidden">Idioma</span>
+          <select data-language><option value="pt-BR">PT-BR</option><option value="en">English</option><option value="es">Español</option></select>
+        </label>
+      </div>
     </header>
 
-    <p id="notice" class="notice" role="status">Carregando a arena…</p>
-
-    <section class="arena" aria-label="Arena de combate">
+    <main class="arena" id="combat" aria-label="Arena de combate">
       <canvas id="arena-fx" class="arena-fx" aria-hidden="true"></canvas>
       <div class="arena-hud">
+        <div class="arena-title">
+          <h2 id="arena-name">Estufa Subsolo</h2>
+          <p id="stage-label"></p>
+        </div>
         <div class="side player">
           <div class="fighter-label"><strong id="player-name">Lemon Haze</strong><span id="player-hp-label">110/110</span></div>
           <progress id="player-hp" value="110" max="110" aria-label="Vida do seu lutador"></progress>
         </div>
-        <div class="round" id="stage-label">1 / 5</div>
         <div class="side opponent">
           <div class="fighter-label"><strong id="rival-name">Violet Skunk</strong><span id="rival-hp-label">96/96</span></div>
           <progress id="rival-hp" value="96" max="96" aria-label="Vida do rival"></progress>
@@ -41,29 +53,38 @@
       <div id="rival-sprite" class="sprite violet rival" aria-hidden="true"></div>
       <div id="attack-call" class="attack-call" aria-hidden="true" hidden></div>
       <div id="fight-call" class="fight-call" aria-hidden="true" hidden></div>
-      <div class="arena-footer">
-        <span id="arena-name">Estufa Subsolo</span>
-        <span id="fight-status" role="status">Combate automático</span>
-      </div>
-    </section>
+      <p id="notice" class="notice" role="status">Carregando a arena…</p>
 
-    <div class="controls" id="controls" inert>
-      <section class="roster" aria-labelledby="roster-title">
-        <h2 id="roster-title">Lutadores</h2>
-        <div class="roster-grid" id="roster"></div>
-      </section>
-      <section class="actions" aria-labelledby="actions-title">
-        <h2 id="actions-title">Comandos</h2>
+      <section class="controls" id="controls" aria-label="Comandos" inert>
+        <div class="fight-status">
+          <span id="fight-status" role="status">Combate automático</span>
+          <span id="fighter-stats">16 ATQ · 110 PV</span>
+        </div>
         <div class="action-grid">
           <button type="button" id="train"><strong>Treinar</strong><span id="train-cost">20 fichas</span></button>
           <button type="button" id="special" class="special"><strong id="special-name">Raio Limão</strong><span id="charge">0 / 5</span></button>
+          <button type="button" id="pause" aria-pressed="false">Pausar</button>
         </div>
         <progress id="special-meter" value="0" max="5" aria-label="Carga do especial"></progress>
-        <div class="action-meta"><span id="fighter-stats">16 ATQ · 110 PV</span><button type="button" id="pause" aria-pressed="false">Pausar</button></div>
         <div class="move-readout"><span>Golpe automático</span><strong id="normal-move">Corte Cítrico</strong></div>
       </section>
-    </div>
+    </main>
+  </div>
+
+  <dialog class="arena-panel" id="roster-panel" aria-labelledby="roster-title">
+    <form method="dialog" class="panel-heading">
+      <h2 id="roster-title">Lutadores</h2>
+      <button type="submit" aria-label="Fechar" autofocus>×</button>
+    </form>
+    <div class="roster-grid" id="roster"></div>
+  </dialog>
+
+  <dialog class="arena-panel" id="save-panel" aria-labelledby="save-title">
+    <form method="dialog" class="panel-heading">
+      <h2 id="save-title">Salvamento</h2>
+      <button type="submit" aria-label="Fechar" autofocus>×</button>
+    </form>
     <section id="save-tools" class="save-tools" aria-label="Salvamento"></section>
-  </main>
+  </dialog>
 </body>
 </html>

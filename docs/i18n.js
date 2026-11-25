@@ -185,6 +185,7 @@ Seu progresso|Your progress|Tu progreso
 Vitórias|Wins|Victorias
 Carregando a arena…|Loading arena…|Cargando la arena…
 Arena de combate|Fight arena|Arena de combate
+Etapa {0} de {1}|Stage {0} of {1}|Etapa {0} de {1}
 Vida do seu lutador|Your fighter’s health|Vida de tu luchador
 Vida do rival|Rival’s health|Vida del rival
 Estufa Subsolo|Basement Greenhouse|Invernadero Subterráneo
