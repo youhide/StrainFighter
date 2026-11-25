@@ -75,6 +75,7 @@ pub(crate) struct Progression {
     pub(crate) highest_stage: usize,
     pub(crate) farming: bool,
     pub(crate) gear: [Option<u8>; GEAR.len()],
+    pub(crate) claimed_gear: [bool; GEAR.len()],
     pub(crate) equipment: [[Option<usize>; 2]; FIGHTER_COUNT],
     pub(crate) strikes: u8,
     pub(crate) special_turns: u8,

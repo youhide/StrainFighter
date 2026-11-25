@@ -114,6 +114,12 @@ pub struct Advance {
     gear_earned: usize,
 }
 
+#[derive(Clone, Copy, Serialize)]
+pub struct MarketGear {
+    pub id: usize,
+    pub rank: u8,
+}
+
 impl Game {
     pub fn new(now_ms: u64) -> Self {
         Self {
@@ -180,7 +186,73 @@ impl Game {
         {
             return None;
         }
+        for (gear, claimed) in game
+            .progression
+            .gear
+            .iter()
+            .zip(&mut game.progression.claimed_gear)
+        {
+            *claimed |= gear.is_some();
+        }
         Some(game)
+    }
+
+    pub fn coins(&self) -> u64 {
+        self.coins
+    }
+
+    pub fn inventory(&self) -> impl Iterator<Item = (MarketGear, bool)> + '_ {
+        self.progression
+            .gear
+            .iter()
+            .enumerate()
+            .filter_map(|(id, rank)| {
+                Some((
+                    MarketGear { id, rank: (*rank)? },
+                    self.progression.wearer(id).is_some(),
+                ))
+            })
+    }
+
+    pub fn take_market_gear(&mut self, id: usize) -> Option<MarketGear> {
+        if self.progression.wearer(id).is_some() {
+            return None;
+        }
+        let rank = self.progression.gear.get_mut(id)?.take()?;
+        self.progression.claimed_gear[id] = true;
+        Some(MarketGear { id, rank })
+    }
+
+    pub fn receive_market_gear(&mut self, gear: MarketGear) -> bool {
+        let Some(slot) = self.progression.gear.get_mut(gear.id) else {
+            return false;
+        };
+        if slot.is_some() || gear.rank > progression::MAX_GEAR_RANK {
+            return false;
+        }
+        *slot = Some(gear.rank);
+        self.progression.claimed_gear[gear.id] = true;
+        true
+    }
+
+    pub fn credit_market_coins(&mut self, amount: u64) -> bool {
+        let Some(next) = self
+            .coins
+            .checked_add(amount)
+            .filter(|next| *next < (1 << 53))
+        else {
+            return false;
+        };
+        self.coins = next;
+        true
+    }
+
+    pub fn debit_market_coins(&mut self, amount: u64) -> bool {
+        let Some(balance) = Balance::new(self.coins).debit(amount) else {
+            return false;
+        };
+        self.coins = balance.amount();
+        true
     }
 
     pub fn advance(&mut self, now_ms: u64) -> Advance {
@@ -380,7 +452,10 @@ impl Game {
             self.wins = self.wins.saturating_add(1);
             self.reward(rival.reward);
             self.progression.add_xp(self.fighter, rival.xp);
-            self.progression.gear[self.stage].get_or_insert(0);
+            if !self.progression.claimed_gear[self.stage] {
+                self.progression.gear[self.stage].get_or_insert(0);
+                self.progression.claimed_gear[self.stage] = true;
+            }
             self.progression.highest_stage = self
                 .progression
                 .highest_stage
