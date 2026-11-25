@@ -699,6 +699,19 @@ mod tests {
     }
 
     #[test]
+    fn a_listed_first_win_drop_cannot_be_farmed_again() {
+        let mut game = Game::new(0);
+        assert!(game.select_rival(0));
+        assert_eq!(game.advance(6_000).gear_earned, 1);
+        let item = game.take_market_gear(0).unwrap();
+        let mut restored = Game::from_save(&serde_json::to_string(&game).unwrap()).unwrap();
+        assert_eq!(restored.advance(13_000).wins, 1);
+        assert_eq!(restored.inventory().count(), 0);
+        assert!(restored.receive_market_gear(item));
+        assert!(!restored.receive_market_gear(item));
+    }
+
+    #[test]
     fn techniques_are_distinct_and_bound_to_the_active_fighter() {
         let mut game = Game::new(0);
         game.stage = 5;

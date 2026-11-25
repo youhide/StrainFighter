@@ -1,4 +1,4 @@
-import { t } from './i18n.js?v=2';
+import { t } from './i18n.js?v=3';
 
 export const fighters = [
   { name: 'Lemon Haze', sprite: 'lemon', techniques: [
@@ -75,7 +75,7 @@ function renderRivals(view) {
   const cards = rivals.map((rival, index) => {
     const locked = index > view.progression.highestStage;
     const card = button(rival.name, 'rival', index, locked);
-    const defeated = view.progression.gear[index] !== null;
+    const defeated = index < view.progression.highestStage || (index === rivals.length - 1 && view.outcome === 'knockout' && index === view.stage);
     const label = index === view.stage ? 'Rival atual' : locked ? 'Bloqueado' : defeated ? 'Vencido' : 'Disponível';
     card.replaceChildren(
       element('strong', t('Etapa {0} · {1}', index + 1, rival.name)),
@@ -88,7 +88,7 @@ function renderRivals(view) {
   byId('auto-advance').disabled = !view.progression.farming;
 }
 
-function renderInventory(view, format) {
+function renderInventory(view, format, online) {
   const cards = view.inventory.map(item => {
     const card = document.createElement('li');
     const label = document.createElement('div');
@@ -108,6 +108,8 @@ function renderInventory(view, format) {
       button(item.upgradeCost === null ? t('Melhoria máxima') : t('Melhorar · {0} fichas',format.format(item.upgradeCost)),
         'upgrade',item.id,item.upgradeCost === null || view.coins < item.upgradeCost),
     );
+    if (online) actions.append(button(t('Caixa · 40 fichas'),'crate',item.id,
+      item.wearer !== null || item.upgradeCost === null || view.coins < 40));
     card.append(label,actions);
     return card;
   });
@@ -116,7 +118,7 @@ function renderInventory(view, format) {
   updateList(byId('inventory'),cards);
 }
 
-export function createProgressionUI(format, handle) {
+export function createProgressionUI(format, online, handle) {
   let renderedTechniques, renderedRivals, renderedInventory;
   for (const panel of [byId('rivals-panel'),byId('equipment-panel')]) {
     panel.addEventListener('click', event => {
@@ -131,7 +133,7 @@ export function createProgressionUI(format, handle) {
       renderedTechniques = xpKey;
       renderTechniques(view, format);
     }
-    const rivalKey = JSON.stringify([view.stage,view.progression.highestStage,view.progression.farming,view.progression.gear.map(rank=>rank!==null)]);
+    const rivalKey = JSON.stringify([view.stage,view.progression.highestStage,view.progression.farming,view.outcome]);
     if (rivalKey !== renderedRivals) {
       renderedRivals = rivalKey;
       renderRivals(view);
@@ -139,7 +141,7 @@ export function createProgressionUI(format, handle) {
     const inventoryKey = JSON.stringify([view.fighter,view.coins,view.inventory]);
     if (inventoryKey !== renderedInventory) {
       renderedInventory = inventoryKey;
-      renderInventory(view, format);
+      renderInventory(view, format, online);
     }
   };
 }

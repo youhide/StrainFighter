@@ -1,5 +1,41 @@
 const translations = `
 Idioma|Language|Idioma
+Mercado|Market|Mercado
+Mercado do StrainFighter|StrainFighter Market|Mercado de StrainFighter
+Jogar StrainFighter|Play StrainFighter|Jugar StrainFighter
+Mercado de equipamentos|Gear market|Mercado de equipo
+Abrir mercado no site|Open market on the website|Abrir mercado en el sitio
+Saldo de fichas|Token balance|Saldo de fichas
+Peça para vender|Gear to sell|Pieza para vender
+Preço em fichas|Price in tokens|Precio en fichas
+Anunciar|List gear|Publicar
+Minhas ofertas|My listings|Mis ofertas
+Ofertas de jogadores|Player listings|Ofertas de jugadores
+Ofertas recentes|Recent listings|Ofertas recientes
+Ofertas anteriores|Older listings|Ofertas anteriores
+Nenhuma peça desequipada|No unequipped gear|No hay equipo sin equipar
+Cancelar oferta|Cancel listing|Cancelar oferta
+Já possui esta peça|Already owned|Ya tienes esta pieza
+Comprar|Buy|Comprar
+Você não tem ofertas ativas.|You have no active listings.|No tienes ofertas activas.
+Nenhuma oferta nesta página.|No listings on this page.|No hay ofertas en esta página.
+Mercado atualizado.|Market updated.|Mercado actualizado.
+Fichas insuficientes.|Not enough tokens.|Fichas insuficientes.
+Você já tem essa peça no inventário ou no mercado.|You already own this piece or have it listed.|Ya tienes esta pieza en el inventario o el mercado.
+A oferta já foi encerrada.|This listing has already closed.|Esta oferta ya se cerró.
+Peça indisponível. Retire-a do lutador antes de anunciar.|Gear unavailable. Unequip it before listing.|Pieza no disponible. Desequípala antes de anunciarla.
+Informe um preço entre 1 e 1.000.000 fichas.|Enter a price between 1 and 1,000,000 tokens.|Introduce un precio entre 1 y 1.000.000 fichas.
+Você não pode comprar sua própria oferta.|You cannot buy your own listing.|No puedes comprar tu propia oferta.
+O servidor está indisponível. Tente novamente.|The server is unavailable. Try again.|El servidor no está disponible. Inténtalo de nuevo.
+O progresso desta arena fica no perfil visitante do servidor.|Arena progress is stored in your server guest profile.|El progreso de esta arena se guarda en el perfil de invitado del servidor.
+Abrir campanha anterior|Open previous campaign|Abrir campaña anterior
+Esta campanha usa o save anterior e funciona separada do mercado.|This campaign uses your previous save and runs separately from the market.|Esta campaña usa el guardado anterior y funciona por separado del mercado.
+Voltar ao perfil do servidor|Back to server profile|Volver al perfil del servidor
+Caixa · 40 fichas|Crate · 40 tokens|Caja · 40 fichas
+Caixa de melhoria para peças desequipadas. 55% sem melhoria, 35% +1 e 10% +2. Limite +5.|Upgrade crate for unequipped gear. 55% no upgrade, 35% +1, and 10% +2. Cap +5.|Caja de mejora para piezas desequipadas. 55 % sin mejora, 35 % +1 y 10 % +2. Límite +5.
+Caixa aberta. A peça subiu +{0}.|Crate opened. Gear gained +{0}.|Caja abierta. La pieza subió +{0}.
+Caixa aberta. A peça manteve o nível.|Crate opened. Gear kept its rank.|Caja abierta. La pieza conservó su nivel.
+A peça já está no nível máximo.|This gear is already at maximum rank.|La pieza ya está al nivel máximo.
 Rivais|Rivals|Rivales
 Equipamento|Gear|Equipo
 Técnicas do lutador ativo|Active fighter’s techniques|Técnicas del luchador activo

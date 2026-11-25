@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#140e1c">
   <meta name="description" content="StrainFighter, um jogo de luta idle da IdleRite Games.">
   <title>StrainFighter · IdleRite Games</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script type="module" src="game.js?v=2"></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script type="module" src="game.js?v=3"></script>
 </head>
 <body>
   <div class="cabinet">
@@ -21,6 +21,7 @@
         <button type="button" data-panel="roster-panel" aria-haspopup="dialog">Lutadores</button>
         <button type="button" data-panel="rivals-panel" aria-haspopup="dialog">Rivais</button>
         <button type="button" data-panel="equipment-panel" aria-haspopup="dialog">Equipamento</button>
+        <button type="button" id="market-button" data-panel="market-panel" aria-haspopup="dialog" hidden>Mercado</button>
         <button type="button" data-panel="save-panel" aria-haspopup="dialog">Salvamento</button>
       </nav>
       <div class="arcade-controls">
@@ -106,8 +107,21 @@
     </form>
     <section class="progression-section">
       <h3 id="equipment-fighter"></h3>
+      <p id="crate-odds" hidden>Caixa de melhoria para peças desequipadas. 55% sem melhoria, 35% +1 e 10% +2. Limite +5.</p>
+      <p id="crate-result" role="status"></p>
       <ul class="progression-list" id="inventory"></ul>
     </section>
+  </dialog>
+
+  <dialog class="arena-panel market-panel" id="market-panel" aria-labelledby="market-title">
+    <form method="dialog" class="panel-heading">
+      <h2 id="market-title">Mercado</h2>
+      <button type="submit" aria-label="Fechar" autofocus>×</button>
+    </form>
+    <div class="progression-section">
+      <a class="market-site-link" href="/mercado/strain-fighter">Abrir mercado no site</a>
+      <section id="market-content" aria-label="Mercado de equipamentos"></section>
+    </div>
   </dialog>
 
   <dialog class="arena-panel" id="save-panel" aria-labelledby="save-title">
@@ -116,6 +130,14 @@
       <button type="submit" aria-label="Fechar" autofocus>×</button>
     </form>
     <section id="save-tools" class="save-tools" aria-label="Salvamento"></section>
+    <div class="progression-section" id="online-save" hidden>
+      <p>O progresso desta arena fica no perfil visitante do servidor.</p>
+      <a href="?mode=solo">Abrir campanha anterior</a>
+    </div>
+    <div class="progression-section" id="return-online" hidden>
+      <p>Esta campanha usa o save anterior e funciona separada do mercado.</p>
+      <a href="?">Voltar ao perfil do servidor</a>
+    </div>
   </dialog>
 </body>
 </html>

@@ -8,13 +8,28 @@ para o lutador ativo.
 
 ## Jogar
 
-Execute `python3 -m http.server 8000 --directory docs` e abra
-`http://localhost:8000`. A pasta `docs/` inclui os arquivos WASM da demo.
+O frontend de produção fica em `web/`. Ele contém o HTML, os sprites 2D e
+o adaptador WebAssembly para a arena. As regras em Rust ficam em `src/`.
 
-Para sincronizar o save com SQLite, rode `cargo run --locked -p idlerite-server`
-no repo vizinho IdleRite e abra `http://127.0.0.1:8080/strain-fighter/`.
-Use **Exportar save** e **Importar save** para trazer o progresso de uma demo
-aberta em outro domínio ou porta.
+Para jogar com mercado e progresso no servidor, rode
+`cargo run --locked -p idlerite-server` no repo vizinho IdleRite e abra
+[StrainFighter](http://127.0.0.1:8080/strain-fighter/). O servidor usa SQLite
+para guardar o saldo e as peças do perfil visitante.
+
+Para jogar a campanha local, execute `python3 -m http.server 8000 --directory web`
+e abra `http://localhost:8000`. No site da IdleRite, **Salvamento →
+Abrir campanha anterior** dá acesso aos saves anteriores. Essa campanha tem
+demonstração offline e importação de saves próprias.
+
+## Mercado de equipamentos
+
+O mercado fica dentro do jogo e em
+[Mercado do StrainFighter](http://127.0.0.1:8080/mercado/strain-fighter)
+com o mesmo perfil, inventário e saldo. Anuncie peças desequipadas por
+fichas, cancele ofertas abertas ou compre equipamento de outros jogadores.
+Cada perfil pode ter uma peça por tipo. A caixa de melhoria custa 40 fichas
+e dá 55% de chance de manter o nível, 35% de subir +1 e 10% de subir +2, com
+teto de +5.
 
 Os idiomas PT-BR, inglês e espanhol acompanham a preferência usada no hub e no
 Gunkyard. A arena ocupa a tela com barras de vida e comandos sobre o combate.
@@ -51,6 +66,6 @@ cargo install wasm-bindgen-cli --version 0.2.129 --locked
 export CARGO_NET_GIT_FETCH_WITH_CLI=true
 cargo test --locked
 cargo build --locked --release --target wasm32-unknown-unknown --target-dir target
-wasm-bindgen --target web --no-typescript --out-dir docs/wasm \
+wasm-bindgen --target web --no-typescript --out-dir web/wasm \
   target/wasm32-unknown-unknown/release/strain_fighter.wasm
 ```
