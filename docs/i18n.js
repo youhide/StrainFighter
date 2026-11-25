@@ -1,5 +1,64 @@
 const translations = `
 Idioma|Language|Idioma
+Rivais|Rivals|Rivales
+Equipamento|Gear|Equipo
+Técnicas do lutador ativo|Active fighter’s techniques|Técnicas del luchador activo
+Selecione uma etapa liberada para repetir o confronto.|Select an unlocked stage to repeat its fight.|Selecciona una etapa desbloqueada para repetir el combate.
+Retomar avanço automático|Resume automatic advancement|Reanudar avance automático
+Treinando contra o mesmo rival|Farming the same rival|Entrenando contra el mismo rival
+Carga em cadeia|Chain Charge|Carga en cadena
+O terceiro golpe de cada sequência carrega o especial duas vezes.|Every third strike charges the special twice.|Cada tercer golpe carga el especial dos veces.
+Rastro elétrico|Lightning Trail|Rastro eléctrico
+Raio Limão reforça em 50% os próximos três golpes do round.|Lemon Bolt boosts the next three strikes of the round by 50%.|Rayo Limón potencia un 50 % los tres siguientes golpes del asalto.
+Guarda de pétalas|Petal Guard|Guardia de pétalos
+Recebe 25% menos dano dos contra-ataques.|Takes 25% less damage from counters.|Recibe un 25 % menos de daño de los contraataques.
+Casca violeta|Violet Bark|Corteza violeta
+Abalo Violeta reduz pela metade os próximos dois contra-ataques.|Violet Quake halves the next two counters.|Temblor Violeta reduce a la mitad los dos siguientes contraataques.
+Contrapé solar|Solar Counterstep|Contrapié solar
+A cada quatro golpes, causa 75% a mais de dano.|Every fourth strike deals 75% more damage.|Cada cuarto golpe inflige un 75 % más de daño.
+Fôlego solar|Solar Breath|Aliento solar
+Vórtice Solar recupera 25% da vida máxima.|Solar Vortex restores 25% of maximum HP.|Vórtice Solar recupera un 25 % de la vida máxima.
+Pátio de Cobre|Copper Courtyard|Patio de Cobre
+Estufa Congelada|Frozen Greenhouse|Invernadero Helado
+Caldeira Floral|Floral Furnace|Caldera Floral
+Trono de Espinhos|Thorn Throne|Trono de Espinas
+Contra-ataque forte a cada quatro golpes|Heavy counter every four strikes|Contraataque fuerte cada cuatro golpes
+Defesa reforçada|Reinforced defense|Defensa reforzada
+Contra-ataque forte a cada três golpes|Heavy counter every three strikes|Contraataque fuerte cada tres golpes
+Defesa reforçada e contra-ataques fortes|Reinforced defense and heavy counters|Defensa reforzada y contraataques fuertes
+Aprendida|Learned|Aprendida
+Libera com {0} XP|Unlocks at {0} XP|Se desbloquea con {0} EXP
+Maestria {0} · {1} XP|Mastery {0} · {1} XP|Maestría {0} · {1} EXP
+Nv. {0} · Maestria {1}|Lv. {0} · Mastery {1}|Niv. {0} · Maestría {1}
+{0} XP|{0} XP|{0} EXP
+Etapa {0} · {1}|Stage {0} · {1}|Etapa {0} · {1}
+Rival atual|Current rival|Rival actual
+Bloqueado|Locked|Bloqueado
+Vencido|Defeated|Derrotado
+Disponível|Available|Disponible
+Punhos|Hand gear|Puños
+Amuleto|Charm|Amuleto
++{0} ATQ|+{0} ATK|+{0} ATQ
++{0} PV|+{0} HP|+{0} PV
++{0} DEF|+{0} DEF|+{0} DEF
+Equipar|Equip|Equipar
+Retirar|Unequip|Desequipar
+Transferir|Transfer|Transferir
+Melhoria máxima|Max upgrade|Mejora máxima
+Melhorar · {0} fichas|Upgrade · {0} tokens|Mejorar · {0} fichas
+Vença cada rival pela primeira vez para ganhar equipamento.|Defeat each rival for the first time to earn gear.|Vence a cada rival por primera vez para ganar equipo.
+Equipamento obtido · {0}|Gear earned · {0}|Equipo obtenido · {0}
+Retorno à arena · +{0} fichas · +{1} XP · {2} vitórias|Back in the arena · +{0} tokens · +{1} XP · {2} wins|De vuelta a la arena · +{0} fichas · +{1} EXP · {2} victorias
+{0} equipamentos|{0} gear pieces|{0} piezas de equipo
+Bandagens de cânhamo|Hemp Wraps|Vendas de cáñamo
+Pingente de âmbar|Amber Pendant|Colgante de ámbar
+Ataduras de jade|Jade Bindings|Vendas de jade
+Talismã da noite|Night Talisman|Talismán nocturno
+Luvas de resina|Resin Gloves|Guantes de resina
+Selo de cobre|Copper Seal|Sello de cobre
+Punhos de gelo|Frost Fists|Puños de hielo
+Amuleto de brasa|Ember Amulet|Amuleto de brasas
+Coroa de espinhos|Thorn Crown|Corona de espinas
 Golpe automático|Auto attack|Ataque automático
 Corte Cítrico|Citrus Cut|Corte Cítrico
 Raio Limão|Lemon Bolt|Rayo Limón

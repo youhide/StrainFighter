@@ -32,6 +32,21 @@ export class Arena {
         }
     }
     /**
+     * @returns {boolean}
+     */
+    advance_campaign() {
+        const ret = wasm.arena_advance_campaign(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} id
+     * @returns {boolean}
+     */
+    equip(id) {
+        const ret = wasm.arena_equip(this.__wbg_ptr, id);
+        return ret !== 0;
+    }
+    /**
      * @param {bigint} now_ms
      * @param {string | null} [save]
      */
@@ -76,6 +91,14 @@ export class Arena {
         return ret !== 0;
     }
     /**
+     * @param {number} stage
+     * @returns {boolean}
+     */
+    select_rival(stage) {
+        const ret = wasm.arena_select_rival(this.__wbg_ptr, stage);
+        return ret !== 0;
+    }
+    /**
      * @param {boolean} paused
      * @param {bigint} now_ms
      */
@@ -94,6 +117,14 @@ export class Arena {
      */
     train() {
         const ret = wasm.arena_train(this.__wbg_ptr);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} id
+     * @returns {boolean}
+     */
+    upgrade_gear(id) {
+        const ret = wasm.arena_upgrade_gear(this.__wbg_ptr, id);
         return ret !== 0;
     }
     /**

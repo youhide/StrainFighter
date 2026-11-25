@@ -115,9 +115,6 @@ progress { display: block; appearance: none; width: 100%; }
 .save-tools button + button { margin-left: 5px; }
 
 @media (max-width: 730px) {
-  .masthead { grid-template-columns: 1fr auto; row-gap: 5px; }
-  .arena-navigation { grid-column: 1 / -1; grid-row: 2; justify-content: center; }
-  .arcade-controls { grid-column: 2; grid-row: 1; }
   .masthead h1 { font-size: clamp(1.45rem, 5vw, 2.1rem); }
   .sprite { width: min(48vw, 54svh, 340px); margin-left: calc(-1 * min(48vw, 54svh, 340px)); }
 }
@@ -143,4 +140,50 @@ progress { display: block; appearance: none; width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .sprite, .sprite.rival, .sprite.defeated, .sprite.rival.defeated { animation: none; }
   .sprite.defeated, .sprite.rival.defeated { opacity: .4; }
+}
+
+.bramble { background-image: url("art/rivals.webp"); }
+.copper { background-position: left top; }
+.frost { background-position: right top; }
+.ember { background-position: left bottom; }
+.briar { background-position: right bottom; }
+.sprite.resin { filter: saturate(.62) hue-rotate(36deg) drop-shadow(0 10px 5px #08040cc4); }
+.arena[data-stage="5"] { --ambient: #c99256; }
+.arena[data-stage="6"] { --ambient: #73cce7; }
+.arena[data-stage="7"] { --ambient: #eb7852; }
+.arena[data-stage="8"] { --ambient: #9eb358; }
+.special-active #player-sprite.lemon { filter: drop-shadow(0 0 11px #e9ff9360) drop-shadow(0 10px 5px #08040cc4); }
+.special-active #player-sprite.violet { filter: drop-shadow(0 0 12px #f397fc85) drop-shadow(0 10px 5px #08040cc4); }
+
+.stat-line { display: flex; gap: 7px 12px; flex-wrap: wrap; }
+#fighter-xp { color: #f1bdff; }
+.gear-drop { position: absolute; z-index: 6; right: clamp(10px, 2.2vw, 26px); bottom: 25px; max-width: 245px; margin: 0; padding: 7px 10px; color: #fae6ff; background: #1f1328ed; border-left: 2px solid var(--violet); font-size: .78rem; }
+.progression-section { padding: 12px 14px 16px; }
+.progression-section :is(h3,p) { margin: 0 0 8px; font-size: .88rem; }
+.progression-section p { color: var(--muted); }
+.progression-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.progression-list li, .rival-list button { padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; background: #251831; }
+.progression-list li:is([data-learned="true"],[data-equipped="true"]), .rival-list button[aria-current] { border-color: #879851; }
+.progression-list li strong, .rival-list button strong { display: block; font-size: .85rem; }
+.progression-list li :is(span,small), .rival-list button small { display: block; color: var(--muted); margin-top: 3px; font-size: .75rem; }
+.progression-list li p { margin: 5px 0 0; font-size: .78rem; }
+.progression-list [data-learned="true"] span { color: var(--lime); }
+.gear-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.gear-actions button, #auto-advance { background: #39254b; border: 1px solid var(--line); border-radius: 4px; padding: 5px 7px; font-size: .76rem; }
+.progression-section button:not(:disabled):hover { border-color: var(--violet); }
+.progression-section button:disabled { opacity: .55; }
+.rival-list { display: grid; gap: 6px; margin-top: 7px; }
+.rival-list button { text-align: left; }
+
+@media (max-width: 870px) {
+  .masthead { grid-template-columns: 1fr auto; row-gap: 5px; }
+  .arena-navigation { grid-column: 1 / -1; grid-row: 2; justify-content: center; flex-wrap: wrap; }
+  .arcade-controls { grid-column: 2; grid-row: 1; }
+  .gear-drop { bottom: calc(clamp(10px, 2.2vw, 26px) + 130px); }
+  .notice:not([hidden]) ~ .controls { border-color: #9975a9; }
+  .gear-drop:not([hidden]) + .notice { bottom: calc(clamp(10px, 2.2vw, 26px) + 168px); }
+}
+@media (max-width: 450px) {
+  .arena-navigation :is(a,button) { padding: 5px 4px; font-size: .72rem; }
+  .stat-line { column-gap: 6px; font-size: .69rem; }
 }

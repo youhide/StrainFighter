@@ -1,21 +1,11 @@
-import init, { Arena } from './wasm/strain_fighter.js';
+import init, { Arena } from './wasm/strain_fighter.js?v=2';
 import { openSave } from './save-client.js';
-import { locale, t } from './i18n.js';
+import { locale, t } from './i18n.js?v=2';
 import { createArenaEffects, moves } from './arena-fx.js';
 
+import { createProgressionUI, fighters, rivals } from './progression-ui.js';
+
 const SAVE_KEY = 'strain-fighter-v1';
-const fighters = [
-  { name: 'Lemon Haze', sprite: 'lemon' },
-  { name: 'Purple Kush', sprite: 'violet' },
-  { name: 'Mango Punch', sprite: 'mango' },
-];
-const rivals = [
-  { name: 'Violet Skunk', sprite: 'violet', arena: 'Estufa Subsolo' },
-  { name: 'Solar Diesel', sprite: 'mango', arena: 'Viveiro Leste' },
-  { name: 'Jade Widow', sprite: 'lemon', arena: 'Jardim de Vidro' },
-  { name: 'Nightshade', sprite: 'night', arena: 'Cúpula Noturna' },
-  { name: 'Black Resin', sprite: 'night', arena: 'Ringue da Resina' },
-];
 const byId = id => document.getElementById(id);
 const now = () => BigInt(Date.now());
 const format = new Intl.NumberFormat(locale);
@@ -34,7 +24,7 @@ function showNotice(message) {
 }
 
 async function start() {
-  await init();
+  await init({ module_or_path: new URL('./wasm/strain_fighter_bg.wasm?v=2', import.meta.url) });
   const saves = await openSave({
     game: 'strain-fighter',
     key: SAVE_KEY,
@@ -70,7 +60,19 @@ async function start() {
     return { button, level };
   });
 
+  const renderProgression = createProgressionUI(format, (command, id) => {
+    if (command === 'rival') {
+      action(() => arena.select_rival(id));
+      byId('rivals-panel').close();
+    } else if (command === 'advance') {
+      action(() => arena.advance_campaign());
+      byId('rivals-panel').close();
+    } else if (command === 'equip') action(() => arena.equip(id));
+    else if (command === 'upgrade') action(() => arena.upgrade_gear(id));
+  });
+
   let previous;
+  let dropTimer;
   function draw({ normal = false, special = false } = {}) {
     const view = JSON.parse(arena.view());
     const fighter = fighters[view.fighter];
@@ -105,11 +107,21 @@ async function start() {
       rivalSprite.classList.toggle('defeated', view.outcome === 'knockout');
     }
     playerSprite.classList.toggle('defeated', view.outcome === 'defeat');
+    battlefield.classList.toggle('special-active', view.progression.specialTurns > 0);
+    if (previous && view.inventory.length > previous.inventory.length) {
+      const drop = view.inventory.find(item => !previous.inventory.some(old => old.id === item.id));
+      const feed = byId('gear-drop');
+      feed.textContent = t('Equipamento obtido · {0}',t(rivals[drop.id].gear));
+      feed.hidden = false;
+      clearTimeout(dropTimer);
+      dropTimer = setTimeout(() => { feed.hidden = true; },3200);
+    }
     previous = view;
+    renderProgression(view);
 
     const status = view.outcome === 'knockout' ? 'Vitória por nocaute'
       : view.outcome === 'defeat' ? 'Derrota · revanche automática'
-        : 'Combate automático';
+        : view.progression.farming ? 'Treinando contra o mesmo rival' : 'Combate automático';
     const statusElement = byId('fight-status');
     const statusText = t(view.paused ? 'Pausado' : status);
     if (statusElement.textContent !== statusText) statusElement.textContent = statusText;
@@ -119,8 +131,9 @@ async function start() {
 
     for (const [index, entry] of roster.entries()) {
       entry.button.setAttribute('aria-pressed', String(index === view.fighter));
-      entry.level.textContent = t('Nv. {0}',view.levels[index]);
+      entry.level.textContent = t('Nv. {0} · Maestria {1}',view.levels[index],view.mastery[index]);
     }
+    byId('fighter-xp').textContent = t('{0} XP',format.format(view.progression.xp[view.fighter]));
     byId('fighter-stats').textContent = t('{0} ATQ · {1} PV',view.damage,view.maxHp);
     byId('normal-move').textContent = t(moves[fighter.sprite].normal.name);
     byId('special-name').textContent = t(moves[fighter.sprite].special.name);
@@ -144,8 +157,10 @@ async function start() {
 
   function sync(returning = false) {
     const result = JSON.parse(arena.advance(now()));
-    if (returning && result.seconds >= 60 && result.coins > 0) {
-      showNotice(t('Enquanto você esteve fora, a arena rendeu {0} fichas e {1} vitórias.',format.format(result.coins),format.format(result.wins)));
+    if (returning && result.seconds >= 60 && (result.coins > 0 || result.xp > 0)) {
+      const summary = t('Retorno à arena · +{0} fichas · +{1} XP · {2} vitórias',
+        format.format(result.coins),format.format(result.xp),format.format(result.wins));
+      showNotice(result.gearEarned ? summary + ' · ' + t('{0} equipamentos',format.format(result.gearEarned)) : summary);
     }
     if (result.seconds > 0) persist();
     if (result.seconds > 0 || returning) draw({ normal: !returning && result.seconds === 1 });
@@ -163,6 +178,8 @@ async function start() {
     arena.free();
     arena = replacement;
     previous = undefined;
+    clearTimeout(dropTimer);
+    byId('gear-drop').hidden = true;
     notice.hidden = true;
     sync(true);
   });

@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#140e1c">
   <meta name="description" content="StrainFighter, um jogo de luta idle da IdleRite Games.">
   <title>StrainFighter · IdleRite Games</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="game.js"></script>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script type="module" src="game.js?v=2"></script>
 </head>
 <body>
   <div class="cabinet">
@@ -19,6 +19,8 @@
       <nav class="arena-navigation" aria-label="Navegação">
         <a href="#combat" aria-current="page">Combate</a>
         <button type="button" data-panel="roster-panel" aria-haspopup="dialog">Lutadores</button>
+        <button type="button" data-panel="rivals-panel" aria-haspopup="dialog">Rivais</button>
+        <button type="button" data-panel="equipment-panel" aria-haspopup="dialog">Equipamento</button>
         <button type="button" data-panel="save-panel" aria-haspopup="dialog">Salvamento</button>
       </nav>
       <div class="arcade-controls">
@@ -53,12 +55,13 @@
       <div id="rival-sprite" class="sprite violet rival" aria-hidden="true"></div>
       <div id="attack-call" class="attack-call" aria-hidden="true" hidden></div>
       <div id="fight-call" class="fight-call" aria-hidden="true" hidden></div>
+      <p id="gear-drop" class="gear-drop" role="status" hidden></p>
       <p id="notice" class="notice" role="status">Carregando a arena…</p>
 
       <section class="controls" id="controls" aria-label="Comandos" inert>
         <div class="fight-status">
           <span id="fight-status" role="status">Combate automático</span>
-          <span id="fighter-stats">16 ATQ · 110 PV</span>
+          <span class="stat-line"><span id="fighter-xp"></span><span id="fighter-stats">16 ATQ · 110 PV</span></span>
         </div>
         <div class="action-grid">
           <button type="button" id="train"><strong>Treinar</strong><span id="train-cost">20 fichas</span></button>
@@ -77,6 +80,34 @@
       <button type="submit" aria-label="Fechar" autofocus>×</button>
     </form>
     <div class="roster-grid" id="roster"></div>
+    <section class="progression-section" aria-labelledby="techniques-title">
+      <h3 id="techniques-title">Técnicas do lutador ativo</h3>
+      <p id="mastery-summary"></p>
+      <ul class="progression-list" id="techniques"></ul>
+    </section>
+  </dialog>
+
+  <dialog class="arena-panel" id="rivals-panel" aria-labelledby="rivals-title">
+    <form method="dialog" class="panel-heading">
+      <h2 id="rivals-title">Rivais</h2>
+      <button type="submit" aria-label="Fechar" autofocus>×</button>
+    </form>
+    <section class="progression-section">
+      <p>Selecione uma etapa liberada para repetir o confronto.</p>
+      <button type="button" id="auto-advance" data-command="advance" disabled>Retomar avanço automático</button>
+      <div class="rival-list" id="rival-list"></div>
+    </section>
+  </dialog>
+
+  <dialog class="arena-panel" id="equipment-panel" aria-labelledby="equipment-title">
+    <form method="dialog" class="panel-heading">
+      <h2 id="equipment-title">Equipamento</h2>
+      <button type="submit" aria-label="Fechar" autofocus>×</button>
+    </form>
+    <section class="progression-section">
+      <h3 id="equipment-fighter"></h3>
+      <ul class="progression-list" id="inventory"></ul>
+    </section>
   </dialog>
 
   <dialog class="arena-panel" id="save-panel" aria-labelledby="save-title">
